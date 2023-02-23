@@ -14,6 +14,13 @@ export const ACTIONS = {
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.ADD_DIGIT:
+      if (state.overwrite) {
+        return {
+          ...state,
+          currentOperand: payload.digit,
+          overwrite: false,
+        }
+      }
       if (payload.digit === "0" && state.currentOperand === "0") {
         return state
       }
@@ -25,10 +32,13 @@ function reducer(state, { type, payload }) {
         currentOperand: `${state.currentOperand || ""}${payload.digit}`,
       }
     case ACTIONS.CHOOSE_OPERATION:
-      if (state.currentOperand === null && state.previousOperand === null) {
+      if (!state.currentOperand) {
         return state
       }
-      if (state.previousOperand === null) {
+      if (!state.currentOperand && !state.previousOperand) {
+        return state
+      }
+      if (!state.previousOperand) {
         return {
           ...state,
           operation: payload.operation,
@@ -36,9 +46,62 @@ function reducer(state, { type, payload }) {
           currentOperand: null,
         }
       }
+      return {
+        ...state,
+        operation: payload.operation,
+        previousOperand: evaluate(state),
+        currentOperand: null,
+      }
     case ACTIONS.CLEAR:
       return {}
+    case ACTIONS.DELETE_DIGIT:
+      if (state.overwrite || !state.currentOperand) {
+        return {
+          ...state,
+          overwrite: false,
+          currentOperand: null,
+        }
+      }
+      return {
+        ...state,
+        currentOperand: state.currentOperand.slice(0, -1),
+      }
+    case ACTIONS.EVALUATE:
+      if (!state.operation || !state.currentOperand || !state.previousOperand) {
+        return state
+      }
+      return {
+        ...state,
+        overwrite: true,
+        operation: null,
+        previousOperand: null,
+        currentOperand: evaluate(state),
+      }
   }
+}
+
+function evaluate({ currentOperand, previousOperand, operation }) {
+  const prev = parseFloat(previousOperand)
+  const current = parseFloat(currentOperand)
+  if (isNaN(prev) || isNaN(current)) {
+    return ""
+  }
+  let calculation
+  switch (operation) {
+    case "+":
+      calculation = prev + current
+      break
+    case "-":
+      calculation = prev - current
+      break
+    case "×":
+      calculation = prev * current
+      break
+    case "÷":
+      calculation = prev / current
+      break
+  }
+  return calculation?.toString()
 }
 
 function App() {
