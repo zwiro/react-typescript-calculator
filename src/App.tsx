@@ -14,15 +14,24 @@ export const ACTIONS = {
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.ADD_DIGIT:
+      if (payload.digit === "0" && state.currentOperand === "0") {
+        return state
+      }
+      if (payload.digit === "." && state.currentOperand.includes(".")) {
+        return state
+      }
       return {
         ...state,
-        currentOperand: `${state.currentOperand}${payload.digit}`,
+        currentOperand: `${state.currentOperand || ""}${payload.digit}`,
       }
+    case ACTIONS.CLEAR:
+      return {}
   }
 }
 
 function App() {
   const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0"]
+  const operations = []
   const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(
     reducer,
     {}

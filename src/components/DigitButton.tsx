@@ -2,10 +2,8 @@ import { useEffect, useState } from "react"
 import { ACTIONS } from "../App"
 
 type DigitButtonProps = {
-  children: React.ReactNode
-  index?: number
-  digit?: string
-  dispatch: React.Dispatch<{ type: string; payload: { digit?: string } }>
+  digit: string
+  dispatch: React.Dispatch<{ type: string; payload: { digit: string } }>
 }
 
 function DigitButton({ digit, dispatch }: DigitButtonProps) {
