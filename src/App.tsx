@@ -24,7 +24,7 @@ function reducer(state, { type, payload }) {
       if (payload.digit === "0" && state.currentOperand === "0") {
         return state
       }
-      if (payload.digit === "." && state.currentOperand.includes(".")) {
+      if (payload.digit === "." && state.currentOperand?.includes(".")) {
         return state
       }
       return {
@@ -104,6 +104,21 @@ function evaluate({ currentOperand, previousOperand, operation }) {
   return calculation?.toString()
 }
 
+const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
+  maximumFractionDigits: 0,
+})
+
+function formatOperand(operand) {
+  if (!operand) {
+    return
+  }
+  const [integer, decimal] = operand.split(".")
+  if (!decimal) {
+    return INTEGER_FORMATTER.format(integer)
+  }
+  return `${INTEGER_FORMATTER.format(integer)}.${decimal}`
+}
+
 function App() {
   const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0"]
   const operations = ["÷", "×", "+", "-"]
@@ -116,10 +131,10 @@ function App() {
       <div className="w-1/2">
         <div className="h-28 w-full bg-zinc-900 px-4 py-8 text-right">
           <p>
-            {previousOperand}
+            {formatOperand(previousOperand)}
             <span>{operation}</span>
           </p>
-          <p className="text-2xl font-bold">{currentOperand}</p>
+          <p className="text-2xl font-bold">{formatOperand(currentOperand)}</p>
         </div>
         <div className="grid w-full grid-cols-4 gap-px">
           <Button dispatch={dispatch} span>
