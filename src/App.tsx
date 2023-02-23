@@ -11,7 +11,19 @@ export const ACTIONS = {
   EVALUATE: "evaluate",
 }
 
-function reducer(state, { type, payload }) {
+interface StateType {
+  currentOperand: string
+  previousOperand: string
+  operation: string
+  overwrite?: boolean
+}
+
+type ActionType = {
+  type: string
+  payload: { digit?: string; operation?: string }
+}
+
+function reducer(state: StateType, { type, payload }: ActionType) {
   switch (type) {
     case ACTIONS.ADD_DIGIT:
       if (state.overwrite) {
@@ -80,7 +92,7 @@ function reducer(state, { type, payload }) {
   }
 }
 
-function evaluate({ currentOperand, previousOperand, operation }) {
+function evaluate({ currentOperand, previousOperand, operation }: StateType) {
   const prev = parseFloat(previousOperand)
   const current = parseFloat(currentOperand)
   if (isNaN(prev) || isNaN(current)) {
@@ -108,33 +120,38 @@ const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
   maximumFractionDigits: 0,
 })
 
-function formatOperand(operand) {
-  if (!operand) {
+function formatOperand(operand: string) {
+  if (operand == null) {
     return
   }
   const [integer, decimal] = operand.split(".")
-  if (!decimal) {
-    return INTEGER_FORMATTER.format(integer)
+  if (decimal == null) {
+    return INTEGER_FORMATTER.format(Number(integer))
   }
-  return `${INTEGER_FORMATTER.format(integer)}.${decimal}`
+  return `${INTEGER_FORMATTER.format(Number(integer))}.${decimal}`
 }
 
 function App() {
   const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0"]
   const operations = ["÷", "×", "+", "-"]
+
+  //typescript error
   const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(
     reducer,
     {}
   )
+
   return (
     <main className="grid h-screen place-items-center">
-      <div className="w-1/2">
-        <div className="h-28 w-full bg-zinc-900 px-4 py-8 text-right">
+      <div className="w-80 sm:w-96">
+        <div className="h-28 w-full overflow-clip bg-zinc-900 px-4 py-8 text-right">
           <p>
             {formatOperand(previousOperand)}
             <span>{operation}</span>
           </p>
-          <p className="text-2xl font-bold">{formatOperand(currentOperand)}</p>
+          <p className="text-lg font-bold sm:text-2xl">
+            {formatOperand(currentOperand)}
+          </p>
         </div>
         <div className="grid w-full grid-cols-4 gap-px">
           <Button dispatch={dispatch} span>
@@ -159,9 +176,16 @@ function App() {
             =
           </Button>
         </div>
+        <p className="text-center font-bold">
+          Created by{" "}
+          <a
+            href="https://github.com/zwiro"
+            className="underline hover:text-blue-300"
+          >
+            zwiro
+          </a>
+        </p>
       </div>
     </main>
   )
 }
-
-export default App
