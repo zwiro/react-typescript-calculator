@@ -31,7 +31,7 @@ function reducer(state, { type, payload }) {
 
 function App() {
   const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0"]
-  const operations = []
+  const operations = ["÷", "×", "+", "-"]
   const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(
     reducer,
     {}
@@ -51,10 +51,13 @@ function App() {
             AC
           </Button>
           <Button dispatch={dispatch}>DEL</Button>
-          <OperationButton dispatch={dispatch} operation="÷" />
-          <OperationButton dispatch={dispatch} operation="×" />
-          <OperationButton dispatch={dispatch} operation="+" />
-          <OperationButton dispatch={dispatch} operation="-" />
+          {operations.map((operation, i) => (
+            <OperationButton
+              key={`${operation}-${i}`}
+              dispatch={dispatch}
+              operation={operation}
+            />
+          ))}
           {digits.map((digit, i) => (
             <DigitButton
               key={`${digit}-${i}`}
