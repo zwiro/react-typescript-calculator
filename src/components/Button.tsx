@@ -2,7 +2,7 @@ import { ACTIONS } from "../App"
 
 type ButtonProps = {
   children: React.ReactNode
-  span?: number
+  span?: boolean
   dispatch: React.Dispatch<{ type: string; payload: { number?: string } }>
 }
 
@@ -17,7 +17,9 @@ function Button({ children, span, dispatch }: ButtonProps) {
   return (
     <button
       onClick={dispatchAction}
-      className={`bg-zinc-500 p-6 font-bold transition-all hover:brightness-75 active:shadow-inner active:shadow-black col-span-${span} `}
+      className={`bg-zinc-500 p-6 font-bold transition-all hover:brightness-75 active:shadow-inner active:shadow-black ${
+        span && "col-span-2"
+      }`}
     >
       {children}
     </button>

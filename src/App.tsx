@@ -24,6 +24,18 @@ function reducer(state, { type, payload }) {
         ...state,
         currentOperand: `${state.currentOperand || ""}${payload.digit}`,
       }
+    case ACTIONS.CHOOSE_OPERATION:
+      if (state.currentOperand === null && state.previousOperand === null) {
+        return state
+      }
+      if (state.previousOperand === null) {
+        return {
+          ...state,
+          operation: payload.operation,
+          previousOperand: state.currentOperand,
+          currentOperand: null,
+        }
+      }
     case ACTIONS.CLEAR:
       return {}
   }
@@ -47,7 +59,7 @@ function App() {
           <p className="text-2xl font-bold">{currentOperand}</p>
         </div>
         <div className="grid w-full grid-cols-4 gap-px">
-          <Button dispatch={dispatch} span={2}>
+          <Button dispatch={dispatch} span>
             AC
           </Button>
           <Button dispatch={dispatch}>DEL</Button>
@@ -65,7 +77,7 @@ function App() {
               dispatch={dispatch}
             />
           ))}
-          <Button dispatch={dispatch} span={2}>
+          <Button dispatch={dispatch} span>
             =
           </Button>
         </div>
