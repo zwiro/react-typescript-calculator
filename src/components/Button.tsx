@@ -1,12 +1,17 @@
+import { ACTIONS } from "../App"
+
 type ButtonProps = {
   children: React.ReactNode
   span?: number
   index?: number
+  number?: string
+  dispatch: React.Dispatch<{ type: string; payload: { number?: string } }>
 }
 
-function Button({ children, span, index }: ButtonProps) {
+function Button({ children, span, index, number, dispatch }: ButtonProps) {
   return (
     <button
+      onClick={() => dispatch({ type: ACTIONS.ADD_DIGIT, payload: { number } })}
       className={`bg-zinc-500 p-6 font-bold transition-all hover:brightness-75 active:shadow-inner active:shadow-black col-span-${span} 
       ${
         index &&
