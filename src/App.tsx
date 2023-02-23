@@ -11,19 +11,19 @@ export const ACTIONS = {
   EVALUATE: "evaluate",
 }
 
-interface StateType {
-  currentOperand: string
-  previousOperand: string
-  operation: string
+interface State {
   overwrite?: boolean
+  currentOperand?: string | null
+  previousOperand?: string | null
+  operation?: string | null
 }
 
-type ActionType = {
+interface Action {
   type: string
-  payload: { digit?: string; operation?: string }
+  payload: { digit: string; operation: string }
 }
 
-function reducer(state: StateType, { type, payload }: ActionType) {
+function reducer(state: State, { type, payload }: Action): State {
   switch (type) {
     case ACTIONS.ADD_DIGIT:
       if (state.overwrite) {
@@ -90,11 +90,12 @@ function reducer(state: StateType, { type, payload }: ActionType) {
         currentOperand: evaluate(state),
       }
   }
+  return state
 }
 
-function evaluate({ currentOperand, previousOperand, operation }: StateType) {
-  const prev = parseFloat(previousOperand)
-  const current = parseFloat(currentOperand)
+function evaluate({ currentOperand, previousOperand, operation }: State) {
+  const prev = parseFloat(previousOperand!)
+  const current = parseFloat(currentOperand!)
   if (isNaN(prev) || isNaN(current)) {
     return ""
   }
@@ -135,7 +136,6 @@ function App() {
   const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0"]
   const operations = ["÷", "×", "+", "-"]
 
-  //typescript error
   const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(
     reducer,
     {}
@@ -146,11 +146,11 @@ function App() {
       <div className="w-80 sm:w-96">
         <div className="h-28 w-full overflow-clip bg-zinc-900 px-4 py-8 text-right">
           <p>
-            {formatOperand(previousOperand)}
+            {formatOperand(previousOperand!)}
             <span>{operation}</span>
           </p>
           <p className="text-lg font-bold sm:text-2xl">
-            {formatOperand(currentOperand)}
+            {formatOperand(currentOperand!)}
           </p>
         </div>
         <div className="grid w-full grid-cols-4 gap-px">

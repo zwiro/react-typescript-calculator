@@ -3,7 +3,7 @@ import { ACTIONS } from "../App"
 
 type DigitButtonProps = {
   digit: string
-  dispatch: React.Dispatch<{ type: string; payload: { digit: string } }>
+  dispatch: React.Dispatch<any>
 }
 
 function DigitButton({ digit, dispatch }: DigitButtonProps) {
