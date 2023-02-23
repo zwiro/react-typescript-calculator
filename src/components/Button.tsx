@@ -3,7 +3,7 @@ import { ACTIONS } from "../App"
 type ButtonProps = {
   children: React.ReactNode
   span?: boolean
-  dispatch: React.Dispatch<{ type: string }>
+  dispatch: React.Dispatch<any>
 }
 
 function Button({ children, span, dispatch }: ButtonProps) {

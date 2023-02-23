@@ -20,10 +20,7 @@ interface State {
 
 interface Action {
   type: string
-  payload: {
-    digit?: string
-    operation?: string
-  }
+  payload: { digit: string; operation: string }
 }
 
 function reducer(state: State, { type, payload }: Action): State {

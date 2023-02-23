@@ -2,7 +2,7 @@ import { ACTIONS } from "../App"
 
 type OperationButtonProps = {
   operation: string
-  dispatch: React.Dispatch<{ type: string; payload: { operation: string } }>
+  dispatch: React.Dispatch<any>
 }
 
 function OperationButton({ operation, dispatch }: OperationButtonProps) {
