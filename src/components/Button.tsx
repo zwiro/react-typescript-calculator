@@ -10,11 +10,11 @@ function Button({ children, span, dispatch }: ButtonProps) {
   function dispatchAction() {
     switch (children) {
       case "AC":
-        dispatch({ type: ACTIONS.CLEAR })
+        return dispatch({ type: ACTIONS.CLEAR })
       case "DEL":
-        dispatch({ type: ACTIONS.DELETE_DIGIT })
+        return dispatch({ type: ACTIONS.DELETE_DIGIT })
       case "=":
-        dispatch({ type: ACTIONS.EVALUATE })
+        return dispatch({ type: ACTIONS.EVALUATE })
     }
   }
 

@@ -44,11 +44,14 @@ function reducer(state: State, { type, payload }: Action): State {
         currentOperand: `${state.currentOperand || ""}${payload.digit}`,
       }
     case ACTIONS.CHOOSE_OPERATION:
-      if (!state.currentOperand) {
-        return state
-      }
       if (!state.currentOperand && !state.previousOperand) {
         return state
+      }
+      if (!state.currentOperand) {
+        return {
+          ...state,
+          operation: payload.operation,
+        }
       }
       if (!state.previousOperand) {
         return {
@@ -67,11 +70,19 @@ function reducer(state: State, { type, payload }: Action): State {
     case ACTIONS.CLEAR:
       return {}
     case ACTIONS.DELETE_DIGIT:
-      if (state.overwrite || !state.currentOperand) {
+      if (state.overwrite) {
         return {
           ...state,
           overwrite: false,
           currentOperand: null,
+        }
+      }
+      if (!state.currentOperand) {
+        return {
+          ...state,
+          operation: null,
+          currentOperand: state.previousOperand,
+          previousOperand: null,
         }
       }
       return {
